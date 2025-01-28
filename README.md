@@ -32,3 +32,10 @@ development such as Codebuild.
 In addition, my purpose has also been to develop my knowledge in two previously unfamiliar
 languages ​​that are commonly used for building microservices. Go and Python.
 
+## Description and use
+
+Imagebook - Is a web application that is intended as a private photo album.
+Currently, the user can register, log in, manage account and profile, upload and delete
+images and view their uploaded images in an infinite scroll. There is also a plan to build on the
+application and make it more social and interactive by implementing functionality to
+be able to interact with other users and view their resources.
