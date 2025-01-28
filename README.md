@@ -56,3 +56,93 @@ MUI has been used to retrieve nice and functional components that in most cases 
 modified further to better fit the application.
 I have tried to maintain a clear and consistent project structure through clear naming,
 dividing code into components, hooks and pages to separate responsibilities, keep the file size down and to be able to reuse code.
+
+## ImageAPI - Go
+
+This API is written in Go and its task is to handle images via requests from the client and user-api.
+It uses libraries such as gorm, gin and aws-sdk and it follows a design pattern with repositories
+for database methods.
+In the development environment, SQLite is used as a database and in the production environment, MySQL is used. To
+manage and store parameters that differ between the different environments and to
+protect secret keys, environment variables and the AWS Parameter Store are used.
+The API has endpoints for uploading, deleting and retrieving images in pages. It also has an endpoint for
+creating a new folder in the S3 bucket based on the user ID that is assigned to new users when they
+register.
+The images are saved in an S3 bucket in aws and their metadata is saved in the database.
+Central and important functionality in this API is the integration with AWS S3.
+For this, the aws-sdk is used to establish a session.
+Handlers that handle traffic to S3 generally have two endpoints. For example, /upload-url which
+receives the file name and description and then in turn establishes a session to AWS and generates a
+"presigned" URL that is sent back to the client so that the client can use it to upload the image directly to S3.
+If that request is successful, the client proceeds to /confirm-upload where the client sends the
+regular S3 URL (not presigned) and description in the request.
+This and other metadata are then saved in the database.
+The keys to unlock the user who has rights in AWS are stored in the .env file locally and in Kubernetes secrets in the production environment in Kubernetes.
+
+## UserAPI - Python
+
+This API is built in Python and handles users, profiles, login and registration.
+It uses libraries such as Flask with "sublibraries", werkzeug security (passwordhash) and
+SQLAlchemy.
+This API also uses SQLite in the development environment and MySQL in the production environment in Kubernetes and
+has environment variables that control which passwords and URLs to use depending on the environment. It also has
+a design pattern where it uses repositories for database methods.
+A central and important function in this API is the login endpoint that generates a JWT where
+the user's id and token validity period are included in the payload. In this way, the remaining endpoints can be more
+general and secure by not addressing a specific id in the route. Instead,
+for example, /current-user is called where the user id is instead retrieved directly from the token. In this way, it is ensured that
+the token only provides access to the user's own resources.
+The token is signed with a secret key that is shared with image-api which uses this to
+validate incoming requests via the client.
+Communication also takes place directly between user-api and image-api. When a user registers
+then user-api sends a request to image-api where image-api in turn connects to aws S3 and
+creates a new own folder for images based on the user's assigned id.
+In this request user-api generates a token that is signed and validated by imageapi. For
+security reasons and to prevent misuse of the image-api endpoint, a separate key
+and token are used that are not exposed to the user.
+
+## CI/CD
+
+All services are published to repositories on GitHub and have codebuild via aws which
+listens to the gibhub repo for changes and builds accordingly.
+Codebuild builds an image and pushes it to a private git server in the cluster.
+This image is then used by the kubernetes cluster to deploy the application through pods
+(containers).
+
+## Kubernetes
+
+The Kubernetes cluster where these microservices are published has a node balancer that distributes the
+incoming traffic to the different pods and resources in the cluster and ensures that the traffic is
+distributed evenly to optimize resource usage, among other things.
+PVC is used to ensure that data is persistent and survives pod restarts.
+The cluster uses cert-manager to automatically retrieve and renew certificates for HTTPS so that
+the resources in the cluster are available securely.
+Ingress is used to manage external access to resources based on domain names and URLs.
+Keys and parameters are stored in Kubernetes secrets and are base64-encoded.
+To control, debug and manage pods and the published applications, Linode's
+interface and Keel are used. Keel is also used to control behaviors such as polling against the image registry.
+
+## Future functionality
+
+This application can currently be seen as an MVP, a Minimum Viable Product.
+Planned future functionality includes:
+• Tests
+• Database backup
+• Interactive features for the user such as searching and interacting with other users
+  and viewing their resources
+• Rate-limiting
+• Email server for authentication and password recovery
+• Input validation
+• Image optimization
+
+## Lessons learned
+
+This project has been incredibly educational, and in addition to Kubernetes, Python and Go in general, I take with me some more specific lessons:
+Lots of logs. Having good and strategic logs is good in a development environment, but especially in
+Kubernetes, as you don't have the same access to, for example, debugging as you do in a
+development environment.
+Break code into smaller components. This is especially true in React, where it is easy for pages and
+components to grow out of proportion and ultimately become difficult to read, understand and maintain.
+Use environment variables for URLs and other parameters that differ between the local environment and
+Kubernetes. This is to be able to switch between them smoothly without having to change these
+parameters continuously.
