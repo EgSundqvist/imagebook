@@ -83,7 +83,8 @@ Currently an MVP (Minimum Viable Product), planned future functionalities includ
 
 ## Lessons Learned
 
-This project has been incredibly educational. Key takeaways include:
-- Strategic logging is crucial, especially in Kubernetes environments where debugging access is limited.
-- Breaking code into smaller components improves readability, understanding, and maintenance.
-- Using environment variables for differing local and Kubernetes parameters allows for smooth transitions without constant changes.
+This project has been incredibly educational, and in addition to Kubernetes, Python, and Go in general, I take with me some more specific lessons:
+
+- Lots of logs. Having good and strategic logs is beneficial in a development environment, but especially in Kubernetes, as you don't have the same access to, for example, debugging as you do in a development environment.
+- Break code into smaller components. This is especially true in React, where it is easy for pages and components to grow out of proportion and ultimately become difficult to read, understand, and maintain.
+- Use environment variables for URLs and other parameters that differ between the local environment and Kubernetes. This is to be able to switch between them smoothly without having to change these parameters continuously.
