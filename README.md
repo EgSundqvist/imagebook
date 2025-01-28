@@ -62,7 +62,7 @@ All services are published to GitHub repositories with AWS CodeBuild listening f
 
 ## Kubernetes
 
-The Kubernetes cluster uses a node balancer to distribute incoming traffic, optimize resource usage, and ensure data persistence with PVC. Cert-manager handles HTTPS certificates, and Ingress manages external access. Keys and parameters are stored in Kubernetes secrets, base64-encoded. Linode's interface and Keel are used for managing pods and applications, with Keel controlling polling behaviors against the image registry.
+The Kubernetes cluster uses a node balancer to distribute incoming traffic, optimize resource usage. PVC is used to ensure data persistence over pod restarts. Cert-manager handles HTTPS certificates, and Ingress manages external access. Keys and parameters are stored in Kubernetes secrets, base64-encoded. Linode's interface and Keel are used for managing pods and applications, with Keel controlling polling behaviors against the image registry.
 
 ## Future Functionality
 
