@@ -42,15 +42,19 @@ TanStack Query is used to display the user's images in an infinite scroll with c
 
 ## ImageAPI - Go
 
-This API, written in Go, handles images via requests from the client and the User API. It uses libraries such as GORM, Gin, and AWS SDK, following a repository pattern for database methods. SQLite is used for development, and MySQL for production. Environment variables and AWS Parameter Store manage differing parameters and protect secret keys.
+This API is written in Go and handles images via requests from the client and User API. It uses libraries such as GORM, Gin, and the AWS SDK, and follows a design pattern with repositories for database methods. In the development environment, SQLite is used as a database, and in the production environment, MySQL is used. To manage and store parameters that differ between the environments and to protect secret keys, environment variables and the AWS Parameter Store are used.
 
-Endpoints include uploading, deleting, and retrieving images in pages, and creating new folders in the S3 bucket based on user IDs. Images are stored in an AWS S3 bucket, with metadata saved in the database. Integration with AWS S3 is central, using the AWS SDK to establish sessions. Handlers for S3 traffic have endpoints like /upload-url and /confirm-upload for handling image uploads.
+The API has endpoints for uploading, deleting, and retrieving images in pages. It also has an endpoint for creating a new folder in the S3 bucket based on the user ID assigned to new users when they register. The images are saved in an S3 bucket in AWS, and their metadata is saved in the database.
+
+A central and important functionality in this API is the integration with AWS S3. For this, the AWS SDK is used to establish a session. Handlers that manage traffic to S3 generally have two endpoints. For example, `/upload-url` receives the file name and description, then establishes a session with AWS and generates a "presigned" URL that is sent back to the client so the client can use it to upload the image directly to S3. If that request is successful, the client proceeds to `/confirm-upload`, where the client sends the regular S3 URL (not presigned) and description in the request. This and other metadata are then saved in the database. The keys to unlock the user who has rights in AWS are stored in the `.env` file locally and in Kubernetes secrets in the production environment.
 
 ## UserAPI - Python
 
-This API, built with Python, handles user management, profiles, login, and registration. It uses libraries such as Flask, Werkzeug Security (password hashing), and SQLAlchemy. SQLite is used for development, and MySQL for production, managed through environment variables.
+This API is built in Python and handles users, profiles, login, and registration. It uses libraries such as Flask with "sublibraries," Werkzeug Security (password hashing), and SQLAlchemy. This API also uses SQLite in the development environment and MySQL in the production environment in Kubernetes, and has environment variables that control which passwords and URLs to use depending on the environment. It also follows a design pattern where it uses repositories for database methods.
 
-A key function is the login endpoint, generating JWTs with user ID and token validity, ensuring secure access to user resources. Communication between the User API and Image API includes creating new user folders in AWS S3 upon registration, with secure token management to prevent endpoint misuse.
+A central and important function in this API is the login endpoint that generates a JWT containing the user's ID and token validity period in the payload. This way, the remaining endpoints can be more general and secure by not addressing a specific ID in the route. Instead, for example, `/current-user` is called, where the user ID is retrieved directly from the token. This ensures that the token only provides access to the user's own resources.
+
+The token is signed with a secret key that is shared with the ImageAPI, which uses this to validate incoming requests via the client. Communication also takes place directly between the UserAPI and ImageAPI. When a user registers, the UserAPI sends a request to the ImageAPI, which in turn connects to AWS S3 and creates a new folder for images based on the user's assigned ID. In this request, the UserAPI generates a token that is signed and validated by the ImageAPI. For security reasons and to prevent misuse of the ImageAPI endpoint, a separate key and token are used that are not exposed to the user.
 
 ## CI/CD
 
