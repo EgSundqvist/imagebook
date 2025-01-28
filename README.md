@@ -10,8 +10,6 @@ This repository contains links and documentation for the ImageBook project's mic
 
 ## Documentation
 
-Add relevant documentation here that describes how the different microservices are connected and how to use them.
-
 ## Example of application flow
 
 ![Example of application flow](https://github.com/EgSundqvist/imagebook/blob/main/ImagebookMicroservicesFlow.png)
@@ -19,4 +17,18 @@ Add relevant documentation here that describes how the different microservices a
 ## CI/CD and cluster flow
 
 ![CI/CD and cluster flow](https://github.com/EgSundqvist/imagebook/blob/main/ImagebookClusterFlow.png)
+
+## Purpose
+
+The purpose of this project has been to build an application according to Cloud Native.
+This concept includes: Logic and functionality is divided into small Microservices instead of larger
+apis and services.
+Container technology such as Docker to package and isolate applications and services and optimize
+use of hardware performance.
+Orchestration with tools such as Kubernetes for distribution and scaling of
+container-based applications.
+CI/CD for continuous integration and delivery and automation of workflows and processes in
+development such as Codebuild.
+In addition, my purpose has also been to develop my knowledge in two previously unfamiliar
+languages ​​that are commonly used for building microservices. Go and Python.
 
