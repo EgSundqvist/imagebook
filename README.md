@@ -1,16 +1,17 @@
 # ImageBook Microservices
 
-Detta repository innehåller länkar och dokumentation för ImageBook-projektets microservices.
+This repository contains links and documentation for the ImageBook project's microservices.
 
 ## Microservices
 
-- [ImageBook Client](https://github.com/EgSundqvist/imagebook-client): Frontend-applikationen byggd med React och TypeScript.
-- [ImageBook User API](https://github.com/EgSundqvist/imagebook-userapi): API för användarhantering.
-- [ImageBook Image API](https://github.com/EgSundqvist/imagebook-imageapi): API för bildhantering.
+- [ImageBook Client](https://github.com/EgSundqvist/imagebook-client): Frontend application, built with React and TypeScript.
+- [ImageBook User API](https://github.com/EgSundqvist/imagebook-userapi): API for user management, built with Python
+- [ImageBook Image API](https://github.com/EgSundqvist/imagebook-imageapi): API for image management, built with Go
 
-## Dokumentation
+## Documentation
 
-Lägg till relevant dokumentation här som beskriver hur de olika microservices hänger ihop och hur man använder dem.
+Add relevant documentation here that describes how the different microservices are connected and how to use them.
 
 ![Example of application flow](https://github.com/EgSundqvist/imagebook/blob/main/ImagebookMicroservicesFlow.png)
 ![CI/CD and cluster flow](https://github.com/EgSundqvist/imagebook/blob/main/ImagebookClusterFlow.png)
+
