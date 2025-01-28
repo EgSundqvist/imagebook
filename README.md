@@ -10,11 +10,11 @@ This repository contains links and documentation for the ImageBook project's mic
 
 ## Documentation
 
-## Example of application flow
+Example of application flow
 
 ![Example of application flow](https://github.com/EgSundqvist/imagebook/blob/main/ImagebookMicroservicesFlow.png)
 
-## CI/CD and cluster flow
+CI/CD and cluster flow
 
 ![CI/CD and cluster flow](https://github.com/EgSundqvist/imagebook/blob/main/ImagebookClusterFlow.png)
 
